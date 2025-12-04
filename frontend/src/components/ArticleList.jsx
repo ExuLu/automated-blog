@@ -3,13 +3,15 @@ import { useState } from 'react';
 import ArticleListItem from './ArticleListItem';
 import mockPosts from '../mockPosts';
 
+import styles from './ArticleList.module.css';
+
 const ArticleList = () => {
-  const [posts, setPosts] = useState(mockPosts);
+  const [posts] = useState(mockPosts);
 
   return (
-    <div>
-      <h1>Automatate Blog</h1>
-      <div>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Automated Blog</h1>
+      <div className={styles.list}>
         {posts.map((post) => (
           <ArticleListItem key={post.id} post={post} />
         ))}
