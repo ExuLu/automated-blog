@@ -7,9 +7,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<Navigate replace to='articles' />} path='/' />
-        <Route element={<BlogPage />} path='articles' />
-        <Route element={<PostPage />} path='articles/:id' />
+        <Route element={<Navigate replace to='/articles' />} path='/' />
+        <Route element={<BlogPage />} path='/articles' />
+        <Route element={<PostPage />} path='/articles/:id' />
       </Routes>
     </BrowserRouter>
   );

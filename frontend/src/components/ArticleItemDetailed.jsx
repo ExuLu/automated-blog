@@ -7,9 +7,15 @@ const ArticleItemDetailed = () => {
 
   return (
     <div>
-      <h1>{post.name}</h1>
-      <p>{post.text}</p>
-      <p>{post.date}</p>
+      {post ? (
+        <>
+          <h1>{post.name}</h1>
+          <p>{post.text}</p>
+          <p>{post.date}</p>
+        </>
+      ) : (
+        <p>Post not found</p>
+      )}
       <Link to='/articles'>Back to Main Page</Link>
     </div>
   );
