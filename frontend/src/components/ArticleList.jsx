@@ -11,7 +11,7 @@ const ArticleList = () => {
       <h1>Automatate Blog</h1>
       <div>
         {posts.map((post) => (
-          <ArticleListItem post={post} />
+          <ArticleListItem key={post.id} post={post} />
         ))}
       </div>
     </div>
