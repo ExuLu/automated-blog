@@ -6,6 +6,28 @@ const FILE_PATH = path.join(__dirname, '..', 'data', 'articles.json');
 
 let { articles } = JSON.parse(fs.readFileSync(FILE_PATH, 'utf-8'));
 
+function saveArticlesToFile(articles, res, newArticle) {
+  const json = JSON.stringify(articles, null, 2);
+
+  fs.writeFile(FILE_PATH, json, 'utf-8', (err) => {
+    if (err) {
+      articles.pop();
+
+      res.status(500).json({
+        status: 'error',
+        message: 'There was an error while saving an article. Please try again',
+      });
+    }
+
+    res.status(201).json({
+      status: 'success',
+      data: {
+        article: newArticle,
+      },
+    });
+  });
+}
+
 exports.getAllArticles = (req, res) => {
   try {
     res.status(200).json({
@@ -60,12 +82,9 @@ exports.createArticle = (req, res) => {
       createdAt: new Date().toISOString(),
     };
 
-    res.status(201).json({
-      status: 'success',
-      data: {
-        article: newArticle,
-      },
-    });
+    articles.push(newArticle);
+
+    saveArticlesToFile(articles, res, newArticle);
   } catch (err) {
     res.status(500).json({
       status: 'error',
