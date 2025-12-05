@@ -1,3 +1,5 @@
+const { v4: uuidv4 } = require('uuid');
+
 exports.getAllArticles = (req, res) => {
   try {
     res.status(200).json({
@@ -24,4 +26,16 @@ exports.getArticleById = (req, res) => {
       message: err.message,
     });
   }
+};
+
+exports.createArticle = (req, res) => {
+  console.log(req.body);
+  const newArticle = { ...req.body, id: uuidv4() };
+
+  res.status(201).json({
+    status: 'success',
+    data: {
+      article: newArticle,
+    },
+  });
 };
