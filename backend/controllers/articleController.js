@@ -4,7 +4,7 @@ const path = require('path');
 
 const FILE_PATH = path.join(__dirname, '..', 'data', 'articles.json');
 
-let { articles } = JSON.parse(fs.readFileSync(FILE_PATH, 'utf-8'));
+let articles = JSON.parse(fs.readFileSync(FILE_PATH, 'utf-8'));
 
 function saveArticlesToFile(articles, res, newArticle) {
   const json = JSON.stringify(articles, null, 2);
