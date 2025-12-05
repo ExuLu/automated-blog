@@ -3,7 +3,10 @@ const articleController = require('../controllers/articleController');
 
 const router = express.Router();
 
-router.route('/').get(articleController.getAllArticles);
+router
+  .route('/')
+  .get(articleController.getAllArticles)
+  .post(articleController.createArticle);
 router.route('/:id').get(articleController.getArticleById);
 
 module.exports = router;

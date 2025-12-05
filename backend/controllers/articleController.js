@@ -6,11 +6,11 @@ exports.getAllArticles = (req, res) => {
       status: 'success',
     });
   } catch (err) {
-    res.status(err.status).json({
-      status: err.status,
-      error: err,
-      message: err.message,
-    });
+    // res.status(err.status).json({
+    //   status: err.status,
+    //   error: err,
+    //   message: err.message,
+    // });
   }
 };
 
@@ -20,28 +20,28 @@ exports.getArticleById = (req, res) => {
       status: 'success',
     });
   } catch (err) {
-    res.status(err.status).json({
-      status: err.status,
-      error: err,
-      message: err.message,
-    });
+    // res.status(err.status).json({
+    //   status: err.status,
+    //   error: err,
+    //   message: err.message,
+    // });
   }
 };
 
 exports.createArticle = (req, res) => {
   try {
+    if (!req.body?.title || !req.body?.content) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'The article should contain title and content',
+      });
+    }
+
     const newArticle = {
       ...req.body,
       id: uuidv4(),
       createdAt: new Date().toISOString(),
     };
-
-    if (!req.body.title || !req.body.content) {
-      res.status(400).json({
-        status: 400,
-        message: 'The article should contain title and content',
-      });
-    }
 
     res.status(201).json({
       status: 'success',
@@ -50,10 +50,15 @@ exports.createArticle = (req, res) => {
       },
     });
   } catch (err) {
-    res.status(err.status).json({
-      status: err.status,
-      error: err,
-      message: err.message,
+    console.log(err);
+    res.status(500).json({
+      status: 'error',
     });
+    // console.log(err.status);
+    // res.status(err.status).json({
+    //   status: err.status,
+    //   error: err,
+    //   message: err.message,
+    // });
   }
 };
