@@ -10,6 +10,7 @@ const FILE_PATH = path.join(__dirname, 'articles.json');
 try {
   articles = JSON.parse(fs.readFileSync(FILE_PATH, 'utf-8'));
 } catch (err) {
+  // TODO: catch file path error and create new file
   console.log(err);
 }
 
