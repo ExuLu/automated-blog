@@ -1,7 +1,6 @@
 const express = require('express');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const xss = require('xss-clean');
 const cors = require('cors');
 const morgan = require('morgan');
 const articleRouter = require('./routes/articleRoute');
@@ -26,7 +25,6 @@ app.use(
 );
 
 app.use(express.json({ limit: '10kb' }));
-app.use(xss());
 
 app.use('/api/articles', articleRouter);
 app.use((req, res) => {

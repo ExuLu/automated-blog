@@ -6,7 +6,7 @@ const router = express.Router();
 router
   .route('/')
   .get(articleController.getAllArticles)
-  .post(articleController.createArticle);
+  .post(articleController.validateArticle, articleController.createArticle);
 router.route('/:id').get(articleController.getArticleById);
 
 module.exports = router;

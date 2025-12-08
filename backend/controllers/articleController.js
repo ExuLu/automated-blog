@@ -29,7 +29,7 @@ exports.getArticleById = (req, res) => {
   });
 };
 
-exports.createArticle = async (req, res) => {
+exports.validateArticle = (req, res, next) => {
   if (!req.body?.title || !req.body?.content) {
     return res.status(400).json({
       status: 'fail',
@@ -37,7 +37,14 @@ exports.createArticle = async (req, res) => {
     });
   }
 
-  const newArticle = articleRepository.createArticle(req.body);
+  next();
+};
+
+exports.createArticle = async (req, res) => {
+  const newArticle = articleRepository.createArticle({
+    title: req.body.title,
+    content: req.body.content,
+  });
 
   try {
     await articleRepository.saveArticleToFile();
