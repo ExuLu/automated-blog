@@ -1,19 +1,8 @@
-const { v4: uuidv4 } = require('uuid');
-const fs = require('fs');
-const fsPromises = require('fs').promises;
-const path = require('path');
-
-const FILE_PATH = path.join(__dirname, '..', 'data', 'articles.json');
-
-let articles = JSON.parse(fs.readFileSync(FILE_PATH, 'utf-8'));
-
-async function saveArticlesToFile(articles) {
-  const json = JSON.stringify(articles, null, 2);
-
-  return await fsPromises.writeFile(FILE_PATH, json, 'utf-8');
-}
+const articleRepository = require('../data/articleRepository');
 
 exports.getAllArticles = (req, res) => {
+  const articles = articleRepository.getAllArticles();
+
   res.status(200).json({
     status: 'success',
     data: {
@@ -23,10 +12,10 @@ exports.getAllArticles = (req, res) => {
 };
 
 exports.getArticleById = (req, res) => {
-  const article = articles.find((art) => art.id === req.params.id);
+  const article = articleRepository.getArticleById(req.params.id);
 
   if (!article) {
-    res.status(401).json({
+    return res.status(404).json({
       status: 'fail',
       message: 'Article is not found',
     });
@@ -40,7 +29,7 @@ exports.getArticleById = (req, res) => {
   });
 };
 
-exports.createArticle = (req, res) => {
+exports.createArticle = async (req, res) => {
   if (!req.body?.title || !req.body?.content) {
     return res.status(400).json({
       status: 'fail',
@@ -48,29 +37,23 @@ exports.createArticle = (req, res) => {
     });
   }
 
-  const newArticle = {
-    ...req.body,
-    id: uuidv4(),
-    createdAt: new Date().toISOString(),
-  };
+  const newArticle = articleRepository.createArticle(req.body);
 
-  articles.push(newArticle);
+  try {
+    await articleRepository.saveArticleToFile();
 
-  saveArticlesToFile(articles)
-    .then(() => {
-      res.status(201).json({
-        status: 'success',
-        data: {
-          article: newArticle,
-        },
-      });
-    })
-    .catch((err) => {
-      articles.pop();
-
-      res.status(500).json({
-        status: 'error',
-        message: 'There was an error while saving an article. Please try again',
-      });
+    res.status(201).json({
+      status: 'success',
+      data: {
+        article: newArticle,
+      },
     });
+  } catch (err) {
+    articleRepository.removeArticleAfterError();
+
+    res.status(500).json({
+      status: 'error',
+      message: 'There was an error while saving an article. Please try again',
+    });
+  }
 };
