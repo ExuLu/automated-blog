@@ -9,16 +9,15 @@ const ArticleItemDetailed = () => {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <p>{error}</p>;
+  if (!article) return <p className={styles.notFound}>Article not found</p>;
 
   return (
     <div className={styles.root}>
-      <>
-        <h1 className={styles.title}>{article.title}</h1>
-        <p className={styles.text}>{article.content}</p>
-        <p className={styles.meta}>
-          {new Date(article.createdAt).toLocaleString()}
-        </p>
-      </>
+      <h1 className={styles.title}>{article.title}</h1>
+      <p className={styles.text}>{article.content}</p>
+      <p className={styles.meta}>
+        {new Date(article.createdAt).toLocaleString()}
+      </p>
       <Link className={styles.backLink} to='/articles'>
         Back to Main Page
       </Link>
