@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getArticleById } from '../api/articlesApi';
 
-export default function useArticleById(id) {
+export default function useArticle(id) {
   const [article, setArticle] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);

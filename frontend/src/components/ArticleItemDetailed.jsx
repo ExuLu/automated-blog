@@ -1,22 +1,25 @@
 import { Link, useParams } from 'react-router-dom';
-import mockPosts from '../mockPosts';
 
 import styles from './ArticleItemDetailed.module.css';
+import useArticle from '../hooks/useArticle';
 
 const ArticleItemDetailed = () => {
-  const { id: postId } = useParams();
-  const post = mockPosts.find((post) => post.id === Number(postId));
+  const { id: articleId } = useParams();
+  const { article, isLoading, error } = useArticle(articleId);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div className={styles.root}>
-      {post ? (
+      {article ? (
         <>
-          <h1 className={styles.title}>{post.name}</h1>
-          <p className={styles.text}>{post.text}</p>
-          <p className={styles.meta}>{post.date}</p>
+          <h1 className={styles.title}>{article.name}</h1>
+          <p className={styles.text}>{article.text}</p>
+          <p className={styles.meta}>{article.date}</p>
         </>
       ) : (
-        <p className={styles.notFound}>Post not found</p>
+        <p className={styles.notFound}>Article not found</p>
       )}
       <Link className={styles.backLink} to='/articles'>
         Back to Main Page
