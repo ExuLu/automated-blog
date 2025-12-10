@@ -1,6 +1,4 @@
-const dotenv = require('dotenv');
 const { systemPrompt, userPrompt } = require('./prompts');
-dotenv.config();
 
 const MODEL = process.env.LLM_MODEL;
 const API_KEY = process.env.OPENROUTER_API_KEY;
@@ -27,24 +25,23 @@ function parseJsonFromModel(rawContent) {
 
   text = text.trim();
 
-  if (text.startsWith('```')) {
-    const firstBrace = text.indexOf('{');
-    const lastBrace = text.lastIndexOf('}');
+  const firstBrace = text.indexOf('{');
+  const lastBrace = text.lastIndexOf('}');
+  console.log(lastBrace);
 
-    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-      text = text.slice(firstBrace, lastBrace + 1);
-    }
+  if (firstBrace === -1 || lastBrace === -1 || lastBrace < firstBrace) {
+    console.log('Model content without valid JSON braces:', text);
+    throw new Error('Model did not return JSON-like content');
   }
 
-  if (!text.trim().startsWith('{')) {
-    const firstBrace = text.indexOf('{');
-    const lastBrace = text.lastIndexOf('}');
-    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-      text = text.slice(firstBrace, lastBrace + 1);
-    }
-  }
+  const jsonText = text.slice(firstBrace, lastBrace + 1);
 
-  return JSON.parse(text);
+  try {
+    return JSON.parse(jsonText);
+  } catch (err) {
+    console.log('Raw model content:', rawContent);
+    throw new Error('Failed to parse article JSON from LLM');
+  }
 }
 
 async function generateArticle(topic) {
@@ -54,7 +51,7 @@ async function generateArticle(topic) {
       { role: 'system', content: systemPrompt },
       {
         role: 'user',
-        content: userPrompt(topic).trim(),
+        content: userPrompt(topic),
       },
     ],
   };
@@ -85,14 +82,7 @@ async function generateArticle(topic) {
     throw new Error('LLM returned empty content');
   }
 
-  let article;
-  try {
-    article = parseJsonFromModel(rawContent);
-  } catch (err) {
-    console.log('Raw model content:', rawContent);
-    throw new Error('Failed to parse article JSON from LLM');
-  }
-
+  const article = parseJsonFromModel(rawContent);
   return article;
 }
 
