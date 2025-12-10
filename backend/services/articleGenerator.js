@@ -6,7 +6,17 @@ const MODEL = process.env.LLM_MODEL;
 const API_KEY = process.env.OPENROUTER_API_KEY;
 const OPENROUTER_URL = process.env.OPENROUTER_URL;
 
-async function generateArticle({ topic }) {
+if (!API_KEY) {
+  throw new Error('OPENROUTER_API_KEY is not set');
+}
+if (!MODEL) {
+  throw new Error('LLM_MODEL is not set');
+}
+if (!OPENROUTER_URL) {
+  throw new Error('OPENROUTER_URL is not set');
+}
+
+async function generateArticle(topic) {
   const body = {
     model: MODEL,
     messages: [
@@ -47,7 +57,7 @@ async function generateArticle({ topic }) {
   let article;
   try {
     article = JSON.parse(rawContent);
-  } catch (e) {
+  } catch (err) {
     console.log('Raw model content:', rawContent);
     throw new Error('Failed to parse article JSON from LLM');
   }
