@@ -1,4 +1,5 @@
 const articleRepository = require('../data/articleRepository');
+const { createAndGenerate } = require('../services/articleService');
 
 exports.getAllArticles = (req, res) => {
   const articles = articleRepository.getAllArticles();
@@ -57,5 +58,22 @@ exports.createArticle = async (req, res) => {
 exports.generateAndCreateArticle = async (req, res) => {
   const topic = req.body.topic;
 
+  try {
+    const newArticle = createAndGenerate(topic);
 
+    res.status(200).json({
+      status: 'success',
+      data: {
+        article: newArticle,
+      },
+    });
+  } catch (err) {
+    console.error('Generation failed: ', err);
+    res.status(500).json({
+      status: 'error',
+      message:
+        err.message ||
+        'Failed to generate and save article. Please try again later',
+    });
+  }
 };
