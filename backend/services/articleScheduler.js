@@ -25,4 +25,4 @@ function startArticleScheduler() {
   console.log(`Article scheduler started with cron: "${schedule}"`);
 }
 
-module.exports = { startArticleScheduler };
+module.exports = startArticleScheduler;
