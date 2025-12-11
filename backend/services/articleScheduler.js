@@ -1,5 +1,6 @@
 const cron = require('node-cron');
 const createAndGenerate = require('./articleService');
+const { getRandomTopic } = require('../data/topicRepository');
 
 function startArticleScheduler() {
   if (process.env.ENABLE_DAILY_GENERATION !== 'true') {
@@ -13,9 +14,10 @@ function startArticleScheduler() {
 
   cron.schedule(schedule, async () => {
     console.log('Starting scheduled article generation...');
+    const topic = getRandomTopic();
 
     try {
-      await createAndGenerate();
+      await createAndGenerate(topic);
       console.log('Scheduled article generated successfully');
     } catch (err) {
       console.error('Scheduled article generation failed:', err);

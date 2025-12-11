@@ -1,10 +1,14 @@
+const fs = require('fs');
+const path = require('path');
+
 let topics = [];
 const FILE_PATH = path.join(__dirname, 'topics.json');
 
 const DEFAULT_TOPIC = 'AI role in modern technologies';
 
 try {
-  topics = JSON.parse(fs.readFileSync(FILE_PATH, 'utf-8'));
+  const raw = fs.readFileSync(FILE_PATH, 'utf-8');
+  const parsed = JSON.parse(raw);
 
   if (Array.isArray(parsed)) {
     topics = parsed
