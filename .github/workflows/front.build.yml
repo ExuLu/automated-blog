@@ -1,42 +1,33 @@
-name: Deploy to Server
+name: Frontend CI (CodeBuild Runner)
 
 on:
   push:
-    branches:
-      - main
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/front.build.yml'
+  pull_request:
+    paths:
+      - 'frontend/**'
 
 jobs:
-  deploy:
-    name: Deploy via SSH
-    runs-on: ubuntu-latest
+  build-frontend:
+    runs-on: codebuild-blog-frontend-${{ github.run_id }}-${{ github.run_attempt }}
+
+    defaults:
+      run:
+        working-directory: frontend
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - name: Remove .git dir
-        run: sudo rm -rf ./.git
-
-      - name: Copy files to server via SSH
-        uses: appleboy/scp-action@v0.1.7
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          host: 3.66.27.82
-          username: ubuntu
-          key: ${{ secrets.TGBOT_SSH_PRIVATE_KEY }}
-          port: 22
-          source: 'deployment,scripts,package.json'
-          target: '/home/ubuntu/telegram-bot'
-          overwrite: true
-          strip_components: 0
+          node-version: 22
 
-      - name: SSH and restart docker
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: 3.66.27.82
-          username: ubuntu
-          key: ${{ secrets.TGBOT_SSH_PRIVATE_KEY }}
-          port: 22
-          script: |
-            cd /home/ubuntu/telegram-bot/deployment
-            sudo docker compose down
-            sudo docker compose up -d
+      - name: Install deps
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
