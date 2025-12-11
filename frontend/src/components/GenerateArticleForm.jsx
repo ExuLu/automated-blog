@@ -5,7 +5,7 @@ import { generateAndAddArticle } from '../api/articlesApi';
 
 import styles from './GenerateArticleForm.module.css';
 
-export default function GenerateArticleForm() {
+export default function GenerateArticleForm({ submitAction }) {
   const [topic, setTopic] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -20,6 +20,7 @@ export default function GenerateArticleForm() {
 
     try {
       await generateAndAddArticle(topic);
+      submitAction();
     } catch (err) {
       setError(err.message || 'Failed to generate topic');
     } finally {
