@@ -21,10 +21,17 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Log in to Amazon ECR
-        run: |
-          aws ecr get-login-password --region eu-central-1 \
-          | docker login --username AWS --password-stdin 304936888939.dkr.ecr.eu-central-1.amazonaws.com
+      # - name: Log in to Amazon ECR
+      #   run: |
+      #     aws ecr get-login-password --region eu-central-1 \
+      #     | docker login --username AWS --password-stdin 304936888939.dkr.ecr.eu-central-1.amazonaws.com
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Build Docker image
         working-directory: frontend
