@@ -25,9 +25,9 @@ jobs:
         run: |
           sudo curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/local/bin/yq
           sudo chmod +x /usr/local/bin/yq
-          /usr/local/bin/yq eval -i \
-            '(.services[].image |= (try sub(":latest$"; ":" + strenv(IMAGE_TAG)) catch .))' \
-            "$FILE_PATH"
+          /usr/local/bin/yq e -i \
+          '(.services[] | select(.image != null) | .image) |= sub(":latest$"; ":" + strenv(IMAGE_TAG))' \
+          "$FILE_PATH"
 
       - name: Copy files to server via SSH
         uses: appleboy/scp-action@v0.1.7
