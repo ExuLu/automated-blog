@@ -19,21 +19,21 @@ jobs:
 
       - name: Replace tag in docker-compose (yq)
         if: ${{ inputs.image_tag != 'latest' }}
-        with:
-          run: |
-            FILE_PATH="deploy/backend.docker-compose.yml"
-
-            sudo curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/local/bin/yq
-            sudo chmod +x /usr/local/bin/yq
-            yq --version
-            yq -i '
-              (.services[].image |=
-                (if . == null then .
-                 elif test(":latest$") then sub(":latest$"; ":" + strenv(IMAGE_TAG))
-                 else .
-                 end)
-              )
-            ' $FILE_PATH
+        env:
+          IMAGE_TAG: ${{ inputs.image_tag }}
+          FILE_PATH: "deploy/backend.docker-compose.yml"
+        run: |
+          sudo curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/local/bin/yq
+          sudo chmod +x /usr/local/bin/yq
+          yq --version
+          yq -i '
+            (.services[].image |=
+              (if . == null then .
+                elif test(":latest$") then sub(":latest$"; ":" + strenv(IMAGE_TAG))
+                else .
+                end)
+            )
+          ' $FILE_PATH
 
       - name: Copy files to server via SSH
         uses: appleboy/scp-action@v0.1.7
