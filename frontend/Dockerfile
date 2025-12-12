@@ -1,4 +1,4 @@
-FROM node:20-alpine AS builder
+FROM public.ecr.aws/docker/library/node:20-alpine AS builder
 
 
 WORKDIR /app
@@ -13,8 +13,9 @@ RUN npm run build
 
 
 
-FROM nginx:1.29.4-alpine3.23-slim AS runtime
+FROM public.ecr.aws/nginx/nginx:1.29.4-alpine3.23-slim AS runtime
 
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 
