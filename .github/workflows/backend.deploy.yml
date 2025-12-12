@@ -1,0 +1,41 @@
+name: Deploy to Server
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy via SSH
+    runs-on: codebuild-blog-frontend-${{ github.run_id }}-${{ github.run_attempt }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      # - name: Remove .git dir
+      #   run: sudo rm -rf ./.git
+
+      - name: Copy files to server via SSH
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: 35.171.228.37
+          username: ec2-user
+          key: ${{ secrets.BLOG_SSH_PRIVATE_KEY }}
+          port: 22
+          # source: "deployment,scripts,package.json"
+          source: "deploy/backend.docker-compose.yml"
+          target: "/opt/automated-blog"
+          overwrite: true
+          strip_components: 0
+
+      - name: SSH and restart docker
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 35.171.228.37
+          username: ec2-user
+          key: ${{ secrets.BLOG_SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd /opt/automated-blog/
+            sudo docker compose down
+            sudo docker compose up -d
