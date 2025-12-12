@@ -20,8 +20,8 @@ jobs:
           username: ec2-user
           key: ${{ secrets.BLOG_SSH_PRIVATE_KEY }}
           port: 22
-          source: "deploy/backend.docker-compose.yml"
-          target: "/opt/automated-blog"
+          source: 'deploy/backend.docker-compose.yml'
+          target: '/opt/automated-blog'
           overwrite: true
           strip_components: 1
 
@@ -34,4 +34,5 @@ jobs:
           port: 22
           script: |
             cd /opt/automated-blog/
+            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 304936888939.dkr.ecr.us-east-1.amazonaws.com
             sudo docker compose -f backend.docker-compose.yml up -d

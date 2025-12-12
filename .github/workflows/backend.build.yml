@@ -11,7 +11,7 @@ on:
 
 jobs:
   build-backend:
-    runs-on: codebuild-blog-backend-${{ github.run_id }}-${{ github.run_attempt }}
+    runs-on: codebuild-automated-blog-backend-${{ github.run_id }}-${{ github.run_attempt }}
 
     steps:
       - name: Checkout repo

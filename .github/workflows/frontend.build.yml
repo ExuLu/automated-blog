@@ -11,7 +11,7 @@ on:
 
 jobs:
   build-frontend:
-    runs-on: codebuild-blog-frontend-${{ github.run_id }}-${{ github.run_attempt }}
+    runs-on: codebuild-automated-blog-frontend-${{ github.run_id }}-${{ github.run_attempt }}
 
     steps:
       - name: Checkout repo
