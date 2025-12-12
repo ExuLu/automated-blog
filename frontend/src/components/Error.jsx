@@ -8,7 +8,7 @@ export default function Error({ message, isMainPage = false }) {
     <div className={styles.root}>
       <div className={styles.box}>
         <span className={styles.icon}>!</span>
-        <p className={styles.message}>{message}</p>
+        <p className={styles.message}>Hello from testing</p>
       </div>
 
       {!isMainPage && <BackLink />}
