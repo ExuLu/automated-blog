@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'backend/**'
+      - deploy/**
   # pull_request:
   #   paths:
   #     - 'backend/**'

@@ -9,7 +9,6 @@ services:
     container_name: 'blog-frontend'
     ports:
       - '80:80'
-    env_file: '/opt/automated-blog/.secrets'
     environment:
       PORT: '80'
       VITE_API_URL: '/api'
