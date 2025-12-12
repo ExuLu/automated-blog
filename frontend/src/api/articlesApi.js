@@ -18,6 +18,7 @@ function resolveApiUrl() {
     return `${window.location.origin}/api`;
   }
 
+  console.log(envUrl);
   return envUrl;
 }
 
