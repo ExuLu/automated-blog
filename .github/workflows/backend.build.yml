@@ -1,13 +1,12 @@
-name: Backend CI (CodeBuild Runner)
+name: Backend - Bake image
 
 on:
   push:
     paths:
       - 'backend/**'
-      - '.github/workflows/back.build.yml'
   # pull_request:
   #   paths:
-  #     - 'frontend/**'
+  #     - 'backend/**'
 
 jobs:
   build-backend:

@@ -1,10 +1,9 @@
-name: Frontend CI (CodeBuild Runner)
+name: Frontend - Bake image
 
 on:
   push:
     paths:
       - 'frontend/**'
-      - '.github/workflows/front.build.yml'
   # pull_request:
   #   paths:
   #     - 'frontend/**'

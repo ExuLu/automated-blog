@@ -1,8 +1,12 @@
-name: Deploy to Server
+name: Frontend - Deploy to server
 
 on:
-  # workflow_dispatch:
-  push:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Docker image tag (e.g. 20251212-1831 or 'latest')"
+        required: true
+        default: "latest"
 
 jobs:
   deploy:
@@ -12,6 +16,22 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Replace tag in docker-compose (yq)
+        if: ${{ inputs.image_tag != 'latest' }}
+        uses: mikefarah/yq@v4
+        env:
+          IMAGE_TAG: ${{ inputs.image_tag }}
+        with:
+          cmd: >
+            yq -i '
+              (.services[].image |=
+                (if . == null then .
+                 elif test(":latest$") then sub(":latest$"; ":" + strenv(IMAGE_TAG))
+                 else .
+                 end)
+              )
+            ' deploy/frontend.docker-compose.yml
 
       - name: Copy files to server via SSH
         uses: appleboy/scp-action@v0.1.7
