@@ -2,9 +2,6 @@ version: '3.9'
 
 services:
   frontend:
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile
     image: '304936888939.dkr.ecr.us-east-1.amazonaws.com/production/frontend:latest'
     container_name: 'blog-frontend'
     ports:
