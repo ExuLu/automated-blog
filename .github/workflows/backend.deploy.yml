@@ -1,7 +1,8 @@
 name: Deploy to Server
 
 on:
-  workflow_dispatch:
+  # workflow_dispatch:
+  push:
 
 jobs:
   deploy:
@@ -26,7 +27,7 @@ jobs:
           source: "deploy/backend.docker-compose.yml"
           target: "/opt/automated-blog"
           overwrite: true
-          strip_components: 0
+          strip_components: 1
 
       - name: SSH and restart docker
         uses: appleboy/ssh-action@v1.0.3
