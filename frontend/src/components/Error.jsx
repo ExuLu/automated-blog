@@ -1,5 +1,3 @@
-import { Link } from 'react-router-dom';
-
 import styles from './Error.module.css';
 import BackLink from './BackLink';
 

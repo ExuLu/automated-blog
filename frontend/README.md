@@ -1,16 +1,34 @@
-# React + Vite
+# Frontend (React + Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Single-page app that lists AI-generated articles, shows details, and lets you request a new post. Built with React Router, served by Nginx in production, and proxies `/api` to the backend container.
 
-Currently, two official plugins are available:
+## Prerequisites
+- Node.js 20+ and npm.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Local development
+1) Create an env file:
+```
+cat > frontend/.env <<'EOF'
+VITE_API_URL=http://localhost:3000/api
+EOF
+```
+2) Install deps and run:
+```
+cd frontend
+npm ci
+npm run dev
+```
+Open http://localhost:5173.
 
-## React Compiler
+## Local Docker (compose)
+Run both frontend and backend with the shared compose file:
+```
+docker compose -f deploy/docker-compose.yml up --build
+```
+Set your OpenRouter API key in the env file referenced by the compose file (default `deploy/.secrets.example`, or adjust the `env_file` path) so the backend container can generate posts.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Scripts
+- `npm run dev` — Vite dev server.
+- `npm run build` — production build.
+- `npm run preview` — preview the built bundle.
+- `npm run lint` — lint sources.

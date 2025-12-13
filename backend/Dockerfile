@@ -13,4 +13,4 @@ ENTRYPOINT ["npm", "run"]
 
 EXPOSE 3000
 
-CMD ["prod"]
+CMD ["prod"] 

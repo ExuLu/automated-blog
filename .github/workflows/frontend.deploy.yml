@@ -1,4 +1,4 @@
-name: Backend - Deploy to server
+name: Frontend - Deploy to server
 
 on:
   workflow_dispatch:
@@ -6,12 +6,12 @@ on:
       image_tag:
         description: "Docker image tag (e.g. 20251212-1831 or 'latest')"
         required: true
-        default: 'latest'
+        default: "latest"
 
 jobs:
   deploy:
-    name: Backend - Deploy to server
-    runs-on: codebuild-automated-blog-backend-${{ github.run_id }}-${{ github.run_attempt }}
+    name: Frontend - Deploy to server
+    runs-on: codebuild-automated-blog-frontend-${{ github.run_id }}-${{ github.run_attempt }}
 
     steps:
       - name: Checkout repository
@@ -21,7 +21,7 @@ jobs:
         if: ${{ inputs.image_tag != 'latest' }}
         env:
           IMAGE_TAG: ${{ inputs.image_tag }}
-          FILE_PATH: "deploy/backend.docker-compose.yml"
+          FILE_PATH: "deploy/frontend.docker-compose.yml"
         run: |
           sudo curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/local/bin/yq
           sudo chmod +x /usr/local/bin/yq
@@ -36,7 +36,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.BLOG_SSH_PRIVATE_KEY }}
           port: 22
-          source: 'deploy/backend.docker-compose.yml'
+          source: 'deploy/frontend.docker-compose.yml'
           target: '/opt/automated-blog'
           overwrite: true
           strip_components: 1
@@ -53,4 +53,4 @@ jobs:
             aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 304936888939.dkr.ecr.us-east-1.amazonaws.com
             sudo mkdir -p /root/.docker
             sudo cp /home/ec2-user/.docker/config.json /root/.docker/config.json
-            sudo docker compose -p blog-backend -f backend.docker-compose.yml up -d
+            sudo docker compose -p blog-frontend -f frontend.docker-compose.yml up -d

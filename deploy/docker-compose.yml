@@ -2,24 +2,38 @@ version: '3.9'
 
 services:
   backend:
-    image: '304936888939.dkr.ecr.us-east-1.amazonaws.com/production/backend:latest'
-    pull_policy: always
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: 'blog-backend'
     ports:
       - '3000:3000'
     volumes:
-      - '/opt/automated-blog/persistence:/app/persistence'
-    env_file: '/opt/automated-blog/.secrets'
+      - '.:/app/persistence'
+    env_file: '.secrets.example'
     environment:
       PORT: '3000'
-      FRONTEND_ORIGIN: 'http://35.171.228.37'
+      FRONTEND_ORIGIN: 'http://localhost'
       OPENROUTER_URL: 'https://openrouter.ai/api/v1/chat/completions'
       LLM_MODEL: 'mistralai/devstral-2512:free'
       ENABLE_DAILY_GENERATION: 'true'
-      ARTICLE_CRON: '0 9 * * *'
+      ARTICLE_CRON: '*/1 * * * *'
       TITLE_MAX_LENGTH: '200'
       CONTENT_MAX_LENGTH: '20000'
       ARTICLES_PATH: '/app/persistence/articles.json'
+    networks:
+      - 'automated-blog'
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: 'blog-frontend'
+    ports:
+      - '80:80'
+    environment:
+      PORT: '80'
+      VITE_API_URL: 'localhost/api'
     networks:
       - 'automated-blog'
 
