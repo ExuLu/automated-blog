@@ -4,10 +4,9 @@ on:
   push:
     paths:
       - 'frontend/**'
-      - deploy/**
-  # pull_request:
-  #   paths:
-  #     - 'frontend/**'
+  pull_request:
+    paths:
+      - 'frontend/**'
 
 jobs:
   build-frontend:
